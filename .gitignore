@@ -1,0 +1,7 @@
+/datagen
+/backend/uploads
+/backend/utils
+/backend/src/__pycache__
+/backend/.venv
+/backend/ml_data
+/README.md
