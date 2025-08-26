@@ -1,6 +1,4 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
-from flask_socketio import SocketIO
+from flask import Flask, request, jsonify, render_template
 import os
 import sqlite3
 import json
@@ -8,11 +6,13 @@ from datetime import datetime
 import zipfile
 from apk_analyzer import APKAnalyzer
 from app_database import db
+from livereload import Server
 
+# Init
 app = Flask(__name__)
-CORS(app)
-
-socketio = SocketIO(app, cors_allowed_origins="*")
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.jinja_env.auto_reload = True
+db.init_database()
 
 # Configuration
 UPLOAD_FOLDER = '../uploads'
@@ -20,10 +20,6 @@ DATABASE = '../../database/app.db'
 MAX_FILES = 3
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs('../../database', exist_ok=True)
-
-# Initialize database
-db.init_database()
-
 
 # Utils
 def store_scan_result(analysis_result):
@@ -74,6 +70,10 @@ def maintain_limit(folder, max_files):
         files.pop(0)
 
 # Routes
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 @app.route('/api/upload', methods=['POST'])
 def upload_apk():
     try:
@@ -104,7 +104,6 @@ def upload_apk():
 
         scan_id = store_scan_result(analysis_result)
 
-        # ✅ Fix: pull timestamp from root, not file_info
         return jsonify({
             "scan_id": scan_id,
             "analysis": analysis_result,
@@ -120,25 +119,26 @@ def get_scan_history():
         conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
 
+        # Query the correct columns from your store_scan_result function
         cursor.execute('''
-            SELECT id, filename, risk_score, is_fake, timestamp 
+            SELECT id, file_info, apk_metadata, ml_prediction_result, analysis_timestamp 
             FROM scans 
-            ORDER BY timestamp DESC 
-            LIMIT 50
+            ORDER BY analysis_timestamp DESC 
         ''')
 
         scans = []
         for row in cursor.fetchall():
-            scans.append({
+            scan = {
                 'id': row[0],
-                'filename': row[1],
-                'risk_score': row[2],
-                'is_fake': row[3],
-                'timestamp': row[4]
-            })
+                'file_info': json.loads(row[1]) if row[1] else {},
+                'apk_metadata': json.loads(row[2]) if row[2] else {},
+                'ml_prediction_result': json.loads(row[3]) if row[3] else {},
+                'analysis_timestamp': row[4]
+            }
+            scans.append(scan)
 
         conn.close()
-        return jsonify({'scans': scans})
+        return jsonify(scans)  # Return array directly, not {'scans': scans}
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -149,23 +149,36 @@ def get_scan_details(scan_id):
         conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
 
-        cursor.execute('SELECT * FROM scans WHERE id = ?', (scan_id,))
-        scan = cursor.fetchone()
-
-        if not scan:
+        # Query all the columns you store in store_scan_result
+        cursor.execute('''
+            SELECT file_info, apk_metadata, certificate_info, permissions, 
+                   flags, ml_prediction_result, analysis_timestamp 
+            FROM scans WHERE id = ?
+        ''', (scan_id,))
+        
+        row = cursor.fetchone()
+        if not row:
             return jsonify({'error': 'Scan not found'}), 404
 
+        # Return the exact structure your frontend expects
+        analysis_result = {
+            'file_info': json.loads(row[0]) if row[0] else {},
+            'apk_metadata': json.loads(row[1]) if row[1] else {},
+            'certificate_info': json.loads(row[2]) if row[2] else {},
+            'permissions': json.loads(row[3]) if row[3] else {},
+            'flags': json.loads(row[4]) if row[4] else {},
+            'ml_prediction_result': json.loads(row[5]) if row[5] else {},
+            'analysis_timestamp': row[6]
+        }
+
         conn.close()
-        return jsonify({
-            'id': scan[0],
-            'is_fake': scan[3],
-            'analysis_data': json.loads(scan[4]),  # load back as dict
-            'timestamp': scan[5]
-        })
+        return jsonify(analysis_result)
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    server = Server(app.wsgi_app)
+    server.watch("templates/*.html")   # auto-reload on HTML changes
+    server.watch("static/*.*")         # auto-reload on CSS/JS changes
+    server.serve(host="0.0.0.0", port=5000, debug=True)
