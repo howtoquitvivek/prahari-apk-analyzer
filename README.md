@@ -1,25 +1,31 @@
-# 🛡️ FakeAPK Guardian - Banking App Security Scanner
 
-A comprehensive cybersecurity tool for detecting fake banking APKs using static analysis and machine learning.
+# 🛡️ Prahari - Malicious Banking APK Detector
+
+A comprehensive cybersecurity tool for detecting fake banking APKs used for fraud using static analysis and machine learning.
 
 ## Quick Start
 
 ### Backend Setup
 ```bash
+# Go to backend folder
 cd backend
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-python database.py  # Initialize database
-python app.py       # Start Flask server
+
+# Create and activate a virtual environment using uv
+uv venv
+source .venv/bin/activate   # On Windows: .venv\Scripts\activate
+
+# Install dependencies
+uv pip install -r requirements.txt
+
+# Initialize the database
+python database.py
+
+# Start the Flask server (serves both backend API and frontend template)
+python app.py
+
 ```
 
-### Frontend Setup
-```bash
-cd frontend
-npm install
-npm run dev
-```
+
 
 ## Features
 - APK Static Analysis
@@ -29,12 +35,13 @@ npm run dev
 - Scan History
 
 ## Usage
-1. Start both backend and frontend servers
-2. Open http://localhost:3000
-3. Upload APK file for analysis
-4. View comprehensive security report
+1. Start the Flask backend server
+2. Open [http://localhost:5000](http://localhost:5000) in your browser.
+3. Upload an APK file for analysis.
+4. View the comprehensive security report directly on the same page.
 
 ## Tech Stack
 - Backend: Python Flask + SQLite
-- Frontend: HTML/CSS/JS + Vite
-- ML: scikit-learn Random Forest
+- Frontend: Jinja2 templates + Tailwind
+- ML: scikit-learn Logistic Regression, XGBClassifier
+
