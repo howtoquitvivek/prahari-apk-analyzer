@@ -45,3 +45,11 @@ python app.py
 - Frontend: Jinja2 templates + Tailwind
 - ML: scikit-learn Logistic Regression, XGBClassifier
 
+## Screenshot
+![landing](https://github.com/user-attachments/assets/a42c3d34-ebf3-43bb-85ca-b1534f4cd69e)
+![dashboard](https://github.com/user-attachments/assets/cc346157-b832-4fd3-946c-26d7436af6e8)
+![report](https://github.com/user-attachments/assets/a99edd0a-6798-4a9e-b644-fd5024d2f23a)
+
+
+
+
