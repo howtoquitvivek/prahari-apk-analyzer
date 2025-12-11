@@ -1,9 +1,5 @@
-# /datagen
 /backend/uploads
 /backend/utils
 /backend/src/__pycache__
-
-#/backend/ml_data
-/README.md
 /fake_apk_detector_project.md
 /venv
