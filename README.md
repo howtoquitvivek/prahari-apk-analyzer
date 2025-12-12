@@ -1,10 +1,3 @@
-Perfect — thanks for sharing the **actual project structure**.
-I'll now generate a **fully accurate, polished README** that matches your folders EXACTLY.
-
-This README is production-ready and suitable for GitHub open-source releases.
-
----
-
 # 🛡️ **PRAHARI — Malicious Banking APK Detector**
 
 ### *AI-Powered Static Analysis for Detecting Fraudulent Banking Apps*
