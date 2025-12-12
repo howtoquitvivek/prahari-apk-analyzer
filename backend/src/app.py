@@ -11,7 +11,6 @@ from livereload import Server
 # Init
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
-app.config['MAX_CONTENT_LENGTH'] = 230 * 1024 * 1024  # 100 MB
 app.jinja_env.auto_reload = True
 db.init_database()
 

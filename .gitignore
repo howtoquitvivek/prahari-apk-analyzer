@@ -1,5 +1,7 @@
 /backend/uploads
-/backend/utils
 /backend/src/__pycache__
-/fake_apk_detector_project.md
 /venv
+/datagen
+/backend/uploads
+/backend/src/__pycache__
+
