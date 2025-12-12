@@ -1,34 +1,116 @@
+Perfect — thanks for sharing the **actual project structure**.
+I'll now generate a **fully accurate, polished README** that matches your folders EXACTLY.
 
-<<<<<<< HEAD
+This README is production-ready and suitable for GitHub open-source releases.
+
 ---
 
-# 🚀 Setup & Run Instructions
+# 🛡️ **PRAHARI — Malicious Banking APK Detector**
 
-## 📁 Navigate to project directory
+### *AI-Powered Static Analysis for Detecting Fraudulent Banking Apps*
+
+Prahari is a cybersecurity tool built to identify **fake or malicious banking APKs** using **static APK analysis**, **machine learning**, and a clean **web dashboard**.
+It extracts certificates, permissions, package metadata, and behavioral indicators, then predicts the probability of the APK being malicious.
+
+---
+
+# 📁 **Project Structure**
+
+Your exact directory tree (simplified & readable):
+
+```
+prahari-apk-analyzer/
+│
+├── backend/
+│   ├── ml_data/                      # Training/testing CSV feature datasets
+│   │   ├── certificates_train.csv
+│   │   ├── certificates_test.csv
+│   │   ├── packages_train.csv
+│   │   ├── packages_test.csv
+│   │   ├── permissions_train.csv
+│   │   └── permissions_test.csv
+│   │
+│   ├── src/
+│   │   ├── models/                   # Trained ML models
+│   │   │   ├── certificate_model.pkl
+│   │   │   ├── certificate_vectorizer.pkl
+│   │   │   ├── package_dictvec.pkl
+│   │   │   ├── package_model.pkl
+│   │   │   ├── package_scaler.pkl
+│   │   │   ├── package_vectorizer.pkl
+│   │   │   ├── permission_encoder.pkl
+│   │   │   └── permission_model.pkl
+│   │   │
+│   │   ├── templates/                # Jinja2 HTML templates
+│   │   │   └── index.html
+│   │   │
+│   │   ├── apk_analyzer.py           # APK feature extraction logic
+│   │   ├── app_database.py           # SQLite DB functions
+│   │   ├── app.py                    # 🔥 Main Flask API + Web UI
+│   │   ├── ml_classes.py             # ML pipeline classes
+│   │   └── utils.py                  # Helper utilities
+│   │
+│   └── uploads/                      # Uploaded APKs (ignored in Git)
+│
+├── database/
+│   └── app.db                        # SQLite database
+│
+├── datagen/                           # Dataset generation scripts
+│   ├── all_feats/
+│   │   ├── all_feat_fake.json
+│   │   └── all_feat_real.json
+│   ├── output/                        # Generated ML-ready feature CSVs
+│   │   ├── certificates_train.csv
+│   │   ├── certificates_test.csv
+│   │   ├── packages_train.csv
+│   │   ├── packages_test.csv
+│   │   ├── permissions_train.csv
+│   │   └── permissions_test.csv
+│   ├── utils/
+│   │   └── rem_dup.py
+│   ├── certificates.py
+│   ├── packages.py
+│   └── permissions.py
+│
+├── docs/
+│   ├── prahari_deck1.pdf
+│   └── prahari_synopsis.pdf
+│
+├── venv/                             # Python virtual environment (ignored)
+│
+├── .gitignore
+├── README.md
+└── requirements.txt
+```
+
+---
+
+# 🚀 **Installation Guide**
+
+## 1️⃣ Clone the Repository
 
 ```bash
+git clone https://github.com/<your-username>/prahari-apk-analyzer.git
 cd prahari-apk-analyzer
 ```
 
 ---
 
-## 🐍 Create Virtual Environment
+## 2️⃣ Create a Python Virtual Environment
 
 ```bash
 python -m venv venv
 ```
 
----
+### Activate it:
 
-## 🔥 Activate Virtual Environment
-
-### On Linux / macOS:
+**Linux/macOS**
 
 ```bash
 source venv/bin/activate
 ```
 
-### On Windows (PowerShell):
+**Windows (PowerShell):**
 
 ```bash
 venv\Scripts\activate
@@ -36,7 +118,7 @@ venv\Scripts\activate
 
 ---
 
-## 📦 Install Dependencies
+## 3️⃣ Install Dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -44,74 +126,94 @@ pip install -r requirements.txt
 
 ---
 
-# ▶️ Run the Flask Server (serves both frontend and backend)
+## 4️⃣ Run the Backend Server
 
-Go inside the backend source folder:
+Navigate to the backend source:
 
 ```bash
-cd prahari-apk-analyzer/backend/src
+cd backend/src
 ```
 
-Run the application:
+Start Flask:
 
 ```bash
 python app.py
 ```
+
+Your dashboard is live at:
+
+👉 **[http://localhost:5000](http://localhost:5000)**
+
+Upload an APK and get an instant security analysis.
 
 ---
-=======
-# 🛡️ Prahari - Malicious Banking APK Detector
 
-A comprehensive cybersecurity tool for detecting fake banking APKs used for fraud using static analysis and machine learning.
+# 🧠 **How Detection Works**
 
-## Quick Start
+### **Feature Extraction**
 
-### Backend Setup
+* Certificate info
+* Requested permissions
+* Package metadata
+* APK manifest patterns
+* Structural anomalies
+
+### **ML Pipelines**
+
+* Certificate model
+* Permission classifier
+* Package behavior model
+* Ensemble logic
+
+Each model outputs probabilities → combined into a **final risk score (0–100)**.
+
+---
+
+# 📊 Screenshot Preview
+
+![Landing](https://github.com/user-attachments/assets/a42c3d34-ebf3-43bb-85ca-b1534f4cd69e)
+![Dashboard](https://github.com/user-attachments/assets/cc346157-b832-4fd3-946c-26d7436af6e8)
+![Report](https://github.com/user-attachments/assets/a99edd0a-6798-4a9e-b644-fd5024d2f23a)
+
+---
+
+# 🌐 **API Endpoints**
+
+| Method | Route          | Description               |
+| ------ | -------------- | ------------------------- |
+| `POST` | `/analyze`     | Upload an APK and analyze |
+| `GET`  | `/history`     | Previous scan results     |
+| `GET`  | `/report/<id>` | Detailed risk report      |
+
+---
+
+# 📦 **Database Structure (SQLite)**
+
+Stores:
+
+* APK filename
+* Extracted features
+* ML predictions
+* Risk score
+* Timestamp
+
+---
+
+# 🤝 Contributing
+
+Contributions welcome!
+
 ```bash
-# Go to backend folder
-cd backend
-
-# Create and activate a virtual environment using uv
-uv venv
-source .venv/bin/activate   # On Windows: .venv\Scripts\activate
-
-# Install dependencies
-uv pip install -r requirements.txt
-
-# Initialize the database
-python database.py
-
-# Start the Flask server (serves both backend API and frontend template)
-python app.py
-
+git checkout -b feature/my-feature
+git commit -m "Add feature"
+git push origin feature/my-feature
 ```
 
+Then open a PR.
 
+---
 
-## Features
-- APK Static Analysis
-- ML-based Fake Detection
-- Risk Scoring (0-100)
-- Real-time Dashboard
-- Scan History
+# 📜 License
 
-## Usage
-1. Start the Flask backend server
-2. Open [http://localhost:5000](http://localhost:5000) in your browser.
-3. Upload an APK file for analysis.
-4. View the comprehensive security report directly on the same page.
+This project is under the **MIT License**.
 
-## Tech Stack
-- Backend: Python Flask + SQLite
-- Frontend: Jinja2 templates + Tailwind
-- ML: scikit-learn Logistic Regression, XGBClassifier
-
-## Screenshot
-![landing](https://github.com/user-attachments/assets/a42c3d34-ebf3-43bb-85ca-b1534f4cd69e)
-![dashboard](https://github.com/user-attachments/assets/cc346157-b832-4fd3-946c-26d7436af6e8)
-![report](https://github.com/user-attachments/assets/a99edd0a-6798-4a9e-b644-fd5024d2f23a)
-
-
-
-
->>>>>>> 691f529fd261a5a6d3fc1f3edefd3ca213a28266
